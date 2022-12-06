@@ -1,7 +1,13 @@
-# Tauri + Next.js + Typescript
+# Vercel Notifications
 
-This template should help get you started developing with Tauri, Next.js and Typescript.
+This is a proof of concept Tauri based Next.js App for tracking and getting notifications for projects on Vercel.
 
-## Recommended IDE Setup
+![Screenshot](/screenshots/vercel-notifications.png)
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+### Todo
+
+- [ ] Add settings page to set your auth token
+- [ ] Add database to store auth token and projects
+- [ ] Send notifications on build events
+  - [ ] Set notification preferences (only for ERROR status)
+- [ ] Context menu or another way to navigate from the app to deployment or running app
