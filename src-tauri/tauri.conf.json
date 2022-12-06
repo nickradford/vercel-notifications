@@ -7,8 +7,8 @@
     "withGlobalTauri": false
   },
   "package": {
-    "productName": "tauri-app",
-    "version": "0.0.0"
+    "productName": "Vercel Notifications",
+    "version": "0.0.1"
   },
   "tauri": {
     "allowlist": {
@@ -69,7 +69,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "dev.nickradford.vercel-notifications",
       "longDescription": "",
       "macOS": {
         "entitlements": null,

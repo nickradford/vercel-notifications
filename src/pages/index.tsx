@@ -36,9 +36,11 @@ function App() {
           Add
         </button>
       </form>
-      {projects.map((name) => (
-        <ProjectRow projectName={name} interval={90} key={name} />
-      ))}
+      <div className="space-y-2">
+        {projects.map((name) => (
+          <ProjectRow projectName={name} interval={90} key={name} />
+        ))}
+      </div>
     </div>
   );
 }
