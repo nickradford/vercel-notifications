@@ -4,7 +4,9 @@
 )]
 
 mod db;
+
 use crate::db::db::DB;
+
 use tauri::SystemTray;
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
@@ -27,11 +29,19 @@ fn get_token() -> String {
     token
 }
 
+#[tauri::command]
+fn open_url(url: &str) -> () {
+    match open::that(url) {
+        Ok(..) => (),
+        Err(err) => println!("Failed to open URL {}, {}", url, err),
+    }
+}
+
 fn main() {
     let tray = SystemTray::new();
 
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet, get_token])
+        .invoke_handler(tauri::generate_handler![greet, get_token, open_url])
         .system_tray(tray)
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
