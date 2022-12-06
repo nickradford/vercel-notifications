@@ -14,25 +14,25 @@ function App() {
   return (
     <div className="flex flex-col w-full">
       <form
-        className="flex gap-2 max-w-md pb-8"
+        className="flex max-w-md gap-2 pb-8"
         onSubmit={(e) => {
           e.preventDefault();
           setProjects((projects) => [...projects, projectName]);
           setProjectName("");
         }}
       >
-        <div className="flex-1 relative">
+        <div className="relative flex-1">
           <span className="absolute top-1 left-2.5 text-neutral-500 text-2xl pointer-events-none">
             &#9206;
           </span>
           <input
-            className="bg-neutral-800 pl-8 p-2 rounded focus:bg-neutral-700 w-full focus:ring focus:ring-neutral-600 outline-none"
+            className="w-full p-2 pl-8 rounded outline-none bg-neutral-800 focus:bg-neutral-700 focus:ring focus:ring-neutral-600"
             placeholder="Project name "
             onChange={(e) => setProjectName(e.target.value)}
             value={projectName}
           />
         </div>
-        <button className="bg-neutral-800 p-2 px-4 rounded" type="submit">
+        <button className="p-2 px-4 rounded bg-neutral-800" type="submit">
           Add
         </button>
       </form>

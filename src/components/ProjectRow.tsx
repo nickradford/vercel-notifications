@@ -13,7 +13,6 @@ type ProjectRowProps = {
 };
 
 function fetcher<T>(projectName: string) {
-  console.log("fetching");
   return get<T>(
     `https://api.vercel.com/v6/deployments?app=${projectName}&limit=1`
   );
@@ -82,27 +81,40 @@ export function ProjectRow({ projectName, interval }: ProjectRowProps) {
     };
   }, [dep?.state, ping]);
 
-  if (!dep) {
-    return;
-  }
-
   return (
     <>
-      <div className="flex flex-col hover:bg-neutral-800 px-4 py-2 rounded cursor-pointer transition-colors gap-1 ">
-        {dep.name}
-        <div className="flex justify-between text-neutral-500">
-          <div className="flex gap-6">
-            <StatusIndicator state={dep.state as State} />
-            <Duration
-              start={dep.createdAt}
-              end={isBuilding(dep.state) ? Date.now() : dep.ready ?? Date.now()}
-            />
+      <div className="flex flex-col gap-1 px-4 py-2 transition-colors rounded cursor-pointer hover:bg-neutral-800 ">
+        <h2>{projectName}</h2>
+        {dep ? (
+          <div className="flex justify-between text-neutral-500">
+            <div className="flex gap-6">
+              <StatusIndicator state={dep.state as State} />
+              <Duration
+                start={dep.createdAt}
+                end={
+                  isBuilding(dep.state) ? Date.now() : dep.ready ?? Date.now()
+                }
+              />
+            </div>
+            <span className="flex justify-end w-1/2 gap-1">
+              <BranchIcon className="relative top-1 min-w-[18px]" />
+              <span className="truncate">{dep.meta.githubCommitRef}</span>
+            </span>
           </div>
-          <span className="flex gap-1 w-1/2 justify-end">
-            <BranchIcon className="relative top-1 min-w-[18px]" />
-            <span className="truncate">{dep.meta.githubCommitRef}</span>
-          </span>
-        </div>
+        ) : (
+          <>
+            <div className="flex justify-between text-neutral-500 animate-pulse">
+              <div className="flex gap-6">
+                <span className="w-16 h-6 bg-neutral-800 " />
+                <span className="w-12 h-6 bg-neutral-800 " />
+              </div>
+              <span className="flex justify-end w-1/2 gap-1">
+                <BranchIcon className="relative top-1 min-w-[18px]" />
+                <span className="w-12 h-6 bg-neutral-800" />
+              </span>
+            </div>
+          </>
+        )}
       </div>
       {/* <pre>{data && JSON.stringify(data, null, 2)}</pre> */}
     </>

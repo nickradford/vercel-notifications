@@ -9,10 +9,13 @@ export async function _get<T>(url: string, options?: RequestOptions) {
   });
 }
 export async function get<T>(url: string, options?: RequestOptions) {
+  const invoke = (await import("@tauri-apps/api")).invoke;
+  const token = await invoke("get_token");
+
   return _get<T>(url, {
     ...options,
     headers: {
-      Authorization: `Bearer ${process.env.NEXT_PUBLIC_VERCEL_TOKEN}`,
+      Authorization: `Bearer ${token}`,
     },
   });
 }
