@@ -1,5 +1,11 @@
 import { Response } from "@tauri-apps/api/http";
-import { useCallback, useEffect, useState } from "react";
+import {
+	DetailedHTMLProps,
+	HTMLAttributes,
+	useCallback,
+	useEffect,
+	useState,
+} from "react";
 import useSWR from "swr";
 
 import * as ContextMenu from "@radix-ui/react-context-menu";
@@ -89,10 +95,10 @@ export function ProjectRow({ projectName, interval }: ProjectRowProps) {
 		};
 	}, [dep?.state, ping]);
 
-	const MenuItem = (props) => (
-		<ContextMenu.Item
+	const MenuItem = (props: ContextMenu.MenuItemProps) => (
+		<ContextMenu.ContextMenuItem
 			{...props}
-			className="flex items-center gap-4 px-4 py-1.5 transition-colors duration-100 cursor-default focus:bg-neutral-700 hover:bg-neutral-700 ring-0 hover:ring-0 hover:outline-none"
+			className="flex items-center gap-4 px-4 py-1.5 transition-colors duration-50 cursor-default focus:bg-neutral-700 hover:bg-neutral-700 ring-0 hover:ring-0 hover:outline-none rounded-sm"
 		/>
 	);
 
@@ -135,11 +141,11 @@ export function ProjectRow({ projectName, interval }: ProjectRowProps) {
 				{dep && (
 					<ContextMenu.Portal>
 						<ContextMenu.Content
-							className="w-56 overflow-hidden border rounded shadow-2xl border-neutral-600/25 bg-neutral-700/60 backdrop-blur-xl"
+							className="w-56 p-1 overflow-hidden border rounded shadow-2xl border-neutral-600/25 bg-neutral-700/60 backdrop-blur-xl"
 							alignOffset={5}
 							collisionPadding={10}
 						>
-							<MenuItem onClick={() => open(`https://${dep.url}`)}>
+							<MenuItem onSelect={() => open(`https://${dep.url}`)}>
 								<svg
 									width="15"
 									height="15"
@@ -156,7 +162,7 @@ export function ProjectRow({ projectName, interval }: ProjectRowProps) {
 								</svg>{" "}
 								Visit
 							</MenuItem>
-							<MenuItem onClick={() => open(dep.inspectorUrl)}>
+							<MenuItem onSelect={() => open(dep.inspectorUrl)}>
 								<svg
 									width="15"
 									height="15"
@@ -174,7 +180,7 @@ export function ProjectRow({ projectName, interval }: ProjectRowProps) {
 								Inspect Deployment
 							</MenuItem>
 							<MenuItem
-								onClick={() =>
+								onSelect={() =>
 									open(
 										`https://github.com/${dep.meta.githubOrg}/${dep.meta.githubRepo}/commit/${dep.meta.githubCommitSha}`
 									)
