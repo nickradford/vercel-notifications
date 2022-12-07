@@ -9,12 +9,6 @@ use crate::db::DB;
 
 use tauri::SystemTray;
 
-// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-#[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
-}
-
 #[tauri::command]
 fn get_token() -> String {
     let sql = DB::init().unwrap();
@@ -27,6 +21,31 @@ fn get_token() -> String {
         .unwrap_or("".to_string());
 
     token
+}
+
+#[tauri::command]
+fn set_token(token: &str) -> bool {
+    println!("Setting token to: {}", token);
+    let sql = DB::init().unwrap();
+    match sql.conn.execute(
+        "
+					INSERT INTO kvp(key, value, type)
+					VALUES (?1, ?2, ?3)
+					ON CONFLICT (key) DO UPDATE SET value = ?2, type = ?3",
+        ("vercel_token", token, "string"),
+    ) {
+        Ok(size) => {
+            if size == 1 {
+                true
+            } else {
+                false
+            }
+        }
+        Err(err) => {
+            println!("Error setting token: {}", err);
+            false
+        }
+    }
 }
 
 #[tauri::command]
@@ -54,15 +73,41 @@ fn get_projects() -> Vec<String> {
     projects
 }
 
+#[tauri::command]
+fn set_projects(projects: String) -> bool {
+    println!("Setting projects to: {:?}", projects);
+    let sql = DB::init().unwrap();
+    match sql.conn.execute(
+        "
+    		INSERT INTO kvp(key, value, type)
+    		VALUES (?1, ?2, ?3)
+    		ON CONFLICT (key) DO UPDATE SET value = ?2, type = ?3",
+        ("projects", projects, "string"),
+    ) {
+        Ok(size) => {
+            if size == 1 {
+                true
+            } else {
+                false
+            }
+        }
+        Err(err) => {
+            println!("Error setting projects: {}", err);
+            false
+        }
+    }
+}
+
 fn main() {
     let tray = SystemTray::new();
 
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
-            greet,
             get_token,
+            set_token,
+            get_projects,
+            set_projects,
             open_url,
-            get_projects
         ])
         .system_tray(tray)
         .run(tauri::generate_context!())

@@ -1,13 +1,23 @@
-import { useState } from "react";
-
 import HomePage from "./pages/Home";
+import SettingsPage from "./pages/Settings";
+
+import { createBrowserRouter, RouterProvider, Route } from "react-router-dom";
 
 import "./styles/tailwind.css";
 
-function App() {
-	const [count, setCount] = useState(0);
+const router = createBrowserRouter([
+	{
+		path: "/",
+		element: <HomePage />,
+	},
+	{
+		path: "/settings",
+		element: <SettingsPage />,
+	},
+]);
 
-	return <HomePage />;
+function App() {
+	return <RouterProvider router={router} />;
 }
 
 export default App;
