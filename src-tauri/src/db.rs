@@ -1,13 +1,26 @@
-// #![cfg_attr(
-//     all(not(debug_assertions), target_os = "windows"),
-//     windows_subsystem = "windows"
-// )]
+use rusqlite::{Connection, Result};
 
-pub mod db {
-    use rusqlite::{Connection, Result};
+pub struct DB {
+    pub conn: Connection,
+}
 
-    pub struct DB {
-        pub conn: Connection,
+impl DB {
+    pub fn init() -> Result<DB> {
+        let conn = DB::get_db().unwrap();
+
+        match conn.execute(
+            "CREATE TABLE IF NOT EXISTS kvp (
+                    key TEXT PRIMARY KEY, 
+                    value TEXT NOT NULL, 
+                    type TEXT NOT NULL
+                )",
+            (),
+        ) {
+            Ok(..) => (),
+            Err(error) => println!("Whoops...: {}", error),
+        }
+
+        Ok(DB { conn })
     }
 
     fn get_db() -> Result<Connection> {
@@ -15,25 +28,5 @@ pub mod db {
         let db = Connection::open(path)?;
 
         Ok(db)
-    }
-
-    impl DB {
-        pub fn init() -> Result<DB> {
-            let conn = get_db().unwrap();
-
-            match conn.execute(
-                "CREATE TABLE IF NOT EXISTS kvp (
-                    key TEXT PRIMARY KEY, 
-                    value TEXT NOT NULL, 
-                    type TEXT NOT NULL
-                )",
-                (),
-            ) {
-                Ok(..) => (),
-                Err(error) => println!("Whoops...: {}", error),
-            }
-
-            Ok(DB { conn })
-        }
     }
 }

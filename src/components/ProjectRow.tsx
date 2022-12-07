@@ -92,7 +92,7 @@ export function ProjectRow({ projectName, interval }: ProjectRowProps) {
   const MenuItem = (props) => (
     <ContextMenu.Item
       {...props}
-      className="flex items-center gap-4 px-4 py-1.5 transition-colors duration-100 cursor-default hover:bg-neutral-700 ring-0 hover:ring-0 hover:outline-none"
+      className="flex items-center gap-4 px-4 py-1.5 transition-colors duration-100 cursor-default focus:bg-neutral-700 hover:bg-neutral-700 ring-0 hover:ring-0 hover:outline-none"
     />
   );
 
@@ -137,6 +137,7 @@ export function ProjectRow({ projectName, interval }: ProjectRowProps) {
             <ContextMenu.Content
               className="w-56 overflow-hidden border rounded shadow-2xl border-neutral-600/25 bg-neutral-700/60 backdrop-blur-xl"
               alignOffset={5}
+              collisionPadding={10}
             >
               <MenuItem onClick={() => open(`https://${dep.url}`)}>
                 <svg
