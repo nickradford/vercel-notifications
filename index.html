@@ -5,9 +5,16 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + React + TS</title>
+
   </head>
   <body>
-    <div id="root"></div>
+		<main class="z-10 w-full h-full p-4 pt-12 bg-neutral-900 ">
+      <div
+        data-tauri-drag-region
+        class="absolute inset-x-0 top-0 h-12"
+      ></div>
+   	 	<div id="root"></div>
+		</main>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

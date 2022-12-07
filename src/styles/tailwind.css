@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+	@apply !block relative;
+}
+
+html, body, #root {
+    @apply w-full h-full min-h-full select-none text-neutral-200 bg-neutral-900;
+}
+
+[data-tauri-drag-region] {
+	@apply h-12
+}
+
+.menu-trigger[data-state="open"] {
+    @apply !bg-neutral-800;
+}
