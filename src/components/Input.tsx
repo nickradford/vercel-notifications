@@ -4,7 +4,7 @@ type InputProps = DetailedHTMLProps<
 	InputHTMLAttributes<HTMLInputElement>,
 	HTMLInputElement
 > & {
-	icon: React.ReactNode;
+	icon?: React.ReactNode;
 };
 
 export function Input(props: InputProps) {
