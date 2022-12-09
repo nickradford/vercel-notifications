@@ -6,12 +6,13 @@
 mod db;
 
 use crate::db::DB;
-
+use log::info;
+use simple_logger::SimpleLogger;
 use tauri::SystemTray;
 
 #[tauri::command]
-fn get_token() -> String {
-    let sql = DB::init().unwrap();
+fn get_token(handle: tauri::AppHandle) -> String {
+    let sql = DB::init(handle).unwrap();
 
     let token: String = sql
         .conn
@@ -24,14 +25,13 @@ fn get_token() -> String {
 }
 
 #[tauri::command]
-fn set_token(token: &str) -> bool {
-    println!("Setting token to: {}", token);
-    let sql = DB::init().unwrap();
+fn set_token(handle: tauri::AppHandle, token: &str) -> bool {
+    info!("Setting token to: {}", token);
+    let sql = DB::init(handle).unwrap();
     match sql.conn.execute(
-        "
-					INSERT INTO kvp(key, value, type)
-					VALUES (?1, ?2, ?3)
-					ON CONFLICT (key) DO UPDATE SET value = ?2, type = ?3",
+        "INSERT INTO kvp(key, value, type)
+			VALUES (?1, ?2, ?3)
+			ON CONFLICT (key) DO UPDATE SET value = ?2, type = ?3",
         ("vercel_token", token, "string"),
     ) {
         Ok(size) => {
@@ -42,7 +42,7 @@ fn set_token(token: &str) -> bool {
             }
         }
         Err(err) => {
-            println!("Error setting token: {}", err);
+            info!("Error setting token: {}", err);
             false
         }
     }
@@ -52,13 +52,13 @@ fn set_token(token: &str) -> bool {
 fn open_url(url: &str) -> () {
     match open::that(url) {
         Ok(..) => (),
-        Err(err) => println!("Failed to open URL {}, {}", url, err),
+        Err(err) => info!("Failed to open URL {}, {}", url, err),
     }
 }
 
 #[tauri::command]
-fn get_projects() -> Vec<String> {
-    let sql = DB::init().unwrap();
+fn get_projects(handle: tauri::AppHandle) -> Vec<String> {
+    let sql = DB::init(handle).unwrap();
 
     let row: String = sql
         .conn
@@ -68,18 +68,17 @@ fn get_projects() -> Vec<String> {
         .unwrap_or("[]".to_string());
 
     let projects: Vec<String> = serde_json::from_str(&row.to_string()).unwrap();
-    println!("Projects: {:?}", projects);
+    info!("Projects: {:?}", projects);
 
     projects
 }
 
 #[tauri::command]
-fn set_projects(projects: String) -> bool {
-    println!("Setting projects to: {:?}", projects);
-    let sql = DB::init().unwrap();
+fn set_projects(handle: tauri::AppHandle, projects: String) -> bool {
+    info!("Setting projects to: {:?}", projects);
+    let sql = DB::init(handle).unwrap();
     match sql.conn.execute(
-        "
-    		INSERT INTO kvp(key, value, type)
+        "INSERT INTO kvp(key, value, type)
     		VALUES (?1, ?2, ?3)
     		ON CONFLICT (key) DO UPDATE SET value = ?2, type = ?3",
         ("projects", projects, "string"),
@@ -92,13 +91,14 @@ fn set_projects(projects: String) -> bool {
             }
         }
         Err(err) => {
-            println!("Error setting projects: {}", err);
+            info!("Error setting projects: {}", err);
             false
         }
     }
 }
 
 fn main() {
+    simple_logger::init_with_env().unwrap();
     let tray = SystemTray::new();
 
     tauri::Builder::default()
